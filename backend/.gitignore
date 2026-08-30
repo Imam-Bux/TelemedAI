@@ -1,0 +1,21 @@
+# Environment variables (Crucial for security)
+.env
+.env.local
+.env.development
+.env.production
+
+# Dependency directories
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# Build output (if using TypeScript)
+dist/
+build/
+
+# OS generated files
+.DS_Store
