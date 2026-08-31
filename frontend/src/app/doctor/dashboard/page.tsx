@@ -34,7 +34,7 @@ export default function DoctorDashboard() {
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const res = await fetch('http://localhost:5000/auth/profile', {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/profile`, {
                     method: 'GET',
                     credentials: 'include'
                 });

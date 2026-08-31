@@ -22,7 +22,7 @@ export default function AppointmentsView() {
 
     const fetchAllAppointments = useCallback(async () => {
         try {
-            const response = await fetch('http://localhost:5000/appointment/admin/all', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/appointment/admin/all`, {
                 method: 'GET',
                 credentials: 'include'
             });

@@ -26,7 +26,7 @@ export default function PatientConsultationsPage() {
         }
         setError('');
         try {
-            const res = await fetch('http://localhost:5000/chat/my', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat/my`, {
                 method: 'GET',
                 credentials: 'include'
             });

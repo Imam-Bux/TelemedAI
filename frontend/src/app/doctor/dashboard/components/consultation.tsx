@@ -65,7 +65,7 @@ export default function ConsultationComponent({ appointment, onBack }: Consultat
     const loadReports = useCallback(async () => {
         if (!appointment) return;
         try {
-            const reportsRes = await fetch(`http://localhost:5000/doctor/patient-reports/${appointment.patient_id}`, {
+            const reportsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/doctor/patient-reports/${appointment.patient_id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -88,7 +88,7 @@ export default function ConsultationComponent({ appointment, onBack }: Consultat
         setIsLoading(true);
 
         try {
-            const profileRes = await fetch(`http://localhost:5000/doctor/patient-profile/${appointment.patient_id}`, {
+            const profileRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/doctor/patient-profile/${appointment.patient_id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -103,7 +103,7 @@ export default function ConsultationComponent({ appointment, onBack }: Consultat
 
             await loadReports();
 
-            const chatRes = await fetch(`http://localhost:5000/chat/room/${appointment.id}`, {
+            const chatRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat/room/${appointment.id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -138,7 +138,7 @@ export default function ConsultationComponent({ appointment, onBack }: Consultat
     const loadChat = useCallback(async () => {
         if (!appointment) return;
         try {
-            const chatRes = await fetch(`http://localhost:5000/chat/room/${appointment.id}`, {
+            const chatRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat/room/${appointment.id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -181,7 +181,7 @@ export default function ConsultationComponent({ appointment, onBack }: Consultat
         if (!newMessage.trim() || !appointment || !roomId) return;
 
         try {
-            const res = await fetch(`http://localhost:5000/chat/${roomId}/message`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat/${roomId}/message`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -210,7 +210,7 @@ export default function ConsultationComponent({ appointment, onBack }: Consultat
         if (!appointment) return;
 
         try {
-            const res = await fetch(`http://localhost:5000/doctor/appointments/${appointment.id}/complete`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/doctor/appointments/${appointment.id}/complete`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

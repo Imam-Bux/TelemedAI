@@ -46,7 +46,7 @@ export default function ChatView() {
         }
         setError('');
         try {
-            const res = await fetch('http://localhost:5000/chat/admin/rooms', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat/admin/rooms`, {
                 method: 'GET',
                 credentials: 'include'
             });
@@ -76,7 +76,7 @@ export default function ChatView() {
         setRoomDetail(null);
         setMessages([]);
         try {
-            const res = await fetch(`http://localhost:5000/chat/admin/room/${roomId}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat/admin/room/${roomId}`, {
                 method: 'GET',
                 credentials: 'include'
             });

@@ -38,7 +38,7 @@ export default function PatientConsultationPage() {
             setLoading(true);
             setError('');
             try {
-                const res = await fetch(`http://localhost:5000/chat/room/${appointmentId}`, {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat/room/${appointmentId}`, {
                     method: 'GET',
                     credentials: 'include'
                 });
@@ -67,7 +67,7 @@ export default function PatientConsultationPage() {
 
         setSending(true);
         try {
-            const res = await fetch(`http://localhost:5000/chat/${roomId}/message`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat/${roomId}/message`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

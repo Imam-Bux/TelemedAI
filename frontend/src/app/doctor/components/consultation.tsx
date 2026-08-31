@@ -51,7 +51,7 @@ export default function ConsultationComponent({ appointment, onBack }: Consultat
         try {
             // Auth is carried by the httpOnly cookie via credentials: 'include' —
             // there is no client-readable token to attach here.
-            const profileRes = await fetch(`http://localhost:5000/doctor/patient-profile/${appointment.patient_id}`, {
+            const profileRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/doctor/patient-profile/${appointment.patient_id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -64,7 +64,7 @@ export default function ConsultationComponent({ appointment, onBack }: Consultat
                 setPatientContext(profileData);
             }
 
-            const reportsRes = await fetch(`http://localhost:5000/doctor/patient-reports/${appointment.patient_id}`, {
+            const reportsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/doctor/patient-reports/${appointment.patient_id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -77,7 +77,7 @@ export default function ConsultationComponent({ appointment, onBack }: Consultat
                 setReports(reportsData.reports || reportsData || []);
             }
 
-            const chatRes = await fetch(`http://localhost:5000/chat/${appointment.id}`, {
+            const chatRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat/${appointment.id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -112,7 +112,7 @@ export default function ConsultationComponent({ appointment, onBack }: Consultat
         if (!newMessage.trim() || !appointment) return;
 
         try {
-            const res = await fetch('http://localhost:5000/chat', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -142,7 +142,7 @@ export default function ConsultationComponent({ appointment, onBack }: Consultat
         if (!appointment) return;
 
         try {
-            const res = await fetch(`http://localhost:5000/doctor/appointments/${appointment.id}/complete`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/doctor/appointments/${appointment.id}/complete`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

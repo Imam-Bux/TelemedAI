@@ -29,7 +29,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
         const connect = async () => {
             let profile = null;
             try {
-                const res = await fetch('http://localhost:5000/auth/profile', {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/profile`, {
                     credentials: 'include'
                 });
                 if (res.ok) {
@@ -46,7 +46,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
             setUserId(uid);
             setRole(r);
 
-            const client = io('http://localhost:5000', {
+            const client = io(`${process.env.NEXT_PUBLIC_API_URL}`, {
                 auth: { userId: uid, role: r },
                 transports: ['websocket', 'polling']
             });

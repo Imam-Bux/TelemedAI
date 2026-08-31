@@ -53,8 +53,8 @@ export default function AuthModal() {
         setLoading(true);
 
         const endpoint = isSignup
-            ? 'http://localhost:5000/auth/signUp'
-            : 'http://localhost:5000/auth/login';
+            ? `${process.env.NEXT_PUBLIC_API_URL}/auth/signUp`
+            : `${process.env.NEXT_PUBLIC_API_URL}/auth/login`;
 
         const payload = isSignup
             ? { fullName: name, email, password }

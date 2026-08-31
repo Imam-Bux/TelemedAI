@@ -24,7 +24,7 @@ export default function DoctorsView() {
 
     const fetchDoctors = useCallback(async () => {
         try {
-            const res = await fetch('http://localhost:5000/doctor/all', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/doctor/all`, {
                 credentials: 'include'
             });
             const data = await res.json();

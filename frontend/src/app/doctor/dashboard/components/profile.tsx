@@ -31,7 +31,7 @@ export default function ProfileComponent({ onTabChange }: ProfileProps) {
             setError('');
 
             try {
-                const res = await fetch('http://localhost:5000/doctor/my-profile', {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/doctor/my-profile`, {
                     method: 'GET',
                     credentials: 'include'
                 });
@@ -82,7 +82,7 @@ export default function ProfileComponent({ onTabChange }: ProfileProps) {
                 availableTimings
             };
 
-            const res = await fetch('http://localhost:5000/doctor/profile', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/doctor/profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

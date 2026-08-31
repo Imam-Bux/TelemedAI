@@ -23,7 +23,7 @@ export default function PatientReportsPage() {
 
     const fetchSavedReports = useCallback(async () => {
         try {
-            const response = await fetch('http://localhost:5000/patient/reports', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/patient/reports`, {
                 method: 'GET',
                 credentials: 'include'
             });
@@ -40,7 +40,7 @@ export default function PatientReportsPage() {
         let isMounted = true;
         const loadReports = async () => {
             try {
-                const response = await fetch('http://localhost:5000/patient/reports', {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/patient/reports`, {
                     method: 'GET',
                     credentials: 'include'
                 });
@@ -87,7 +87,7 @@ export default function PatientReportsPage() {
             const formData = new FormData();
             formData.append('file', file);
 
-            const response = await fetch('http://localhost:5000/patient/reports', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/patient/reports`, {
                 method: 'POST',
                 credentials: 'include',
                 body: formData

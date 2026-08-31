@@ -30,7 +30,7 @@ export default function PatientsView() {
         }
         setError('');
         try {
-            const response = await fetch('http://localhost:5000/patient/admin/profiles', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/patient/admin/profiles`, {
                 method: 'GET',
                 credentials: 'include'
             });

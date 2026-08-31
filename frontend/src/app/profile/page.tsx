@@ -27,7 +27,7 @@ export default function PatientProfilePage() {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const response = await fetch('http://localhost:5000/patient/profile', {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/patient/profile`, {
                     method: 'GET',
                     credentials: 'include'
                 });

@@ -12,7 +12,7 @@ export default function PatientDashboard() {
     useEffect(() => {
         const fetchProfileStatus = async () => {
             try {
-                const response = await fetch('http://localhost:5000/patient/profile', {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/patient/profile`, {
                     method: 'GET',
                     credentials: 'include'
                 });
@@ -31,7 +31,7 @@ export default function PatientDashboard() {
     }, []);
 
     const handleLogout = async () => {
-        await fetch('http://localhost:5000/auth/logout', {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
             method: 'POST',
             credentials: 'include'
         });

@@ -26,7 +26,7 @@ export default function ReportsView() {
         }
         setError('');
         try {
-            const response = await fetch('http://localhost:5000/patient/admin/reports', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/patient/admin/reports`, {
                 method: 'GET',
                 credentials: 'include'
             });

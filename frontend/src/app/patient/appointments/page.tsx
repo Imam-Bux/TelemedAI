@@ -180,7 +180,7 @@ export default function PatientAppointmentsPage() {
     // calling this directly, to satisfy react-hooks/set-state-in-effect.
     const fetchMyAppointments = useCallback(async () => {
         try {
-            const res = await fetch('http://localhost:5000/appointment/my', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/appointment/my`, {
                 method: 'GET',
                 credentials: 'include'
             });
@@ -196,7 +196,7 @@ export default function PatientAppointmentsPage() {
     useEffect(() => {
         const fetchDoctors = async () => {
             try {
-                const res = await fetch('http://localhost:5000/doctor/all', {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/doctor/all`, {
                     method: 'GET',
                     credentials: 'include'
                 });
@@ -219,7 +219,7 @@ export default function PatientAppointmentsPage() {
         // useCallback fetcher directly from the effect body.
         const loadMyAppointments = async () => {
             try {
-                const res = await fetch('http://localhost:5000/appointment/my', {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/appointment/my`, {
                     method: 'GET',
                     credentials: 'include'
                 });
@@ -253,7 +253,7 @@ export default function PatientAppointmentsPage() {
             }
             try {
                 const res = await fetch(
-                    `http://localhost:5000/appointment/schedule/${selectedDoctorId}`,
+                    `${process.env.NEXT_PUBLIC_API_URL}/appointment/schedule/${selectedDoctorId}`,
                     { method: 'GET', credentials: 'include' }
                 );
                 const data = await res.json();
@@ -300,7 +300,7 @@ export default function PatientAppointmentsPage() {
 
             try {
                 const res = await fetch(
-                    `http://localhost:5000/appointment/available-slots/${selectedDoctorId}?date=${date}`,
+                    `${process.env.NEXT_PUBLIC_API_URL}/appointment/available-slots/${selectedDoctorId}?date=${date}`,
                     { method: 'GET', credentials: 'include' }
                 );
                 const data = await res.json();
@@ -334,7 +334,7 @@ export default function PatientAppointmentsPage() {
         setSuccess('');
 
         try {
-            const res = await fetch('http://localhost:5000/appointment/book', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/appointment/book`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {

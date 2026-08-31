@@ -32,7 +32,7 @@ export default function OnboardingPage() {
         setError('');
 
         try {
-            const response = await fetch('http://localhost:5000/patient/onboarding', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/patient/onboarding`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {

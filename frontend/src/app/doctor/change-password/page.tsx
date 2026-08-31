@@ -11,7 +11,7 @@ export default function ChangePasswordPage() {
         e.preventDefault();
         setError('');
         try {
-            const res = await fetch('http://localhost:5000/doctor/change-password', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/doctor/change-password`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
