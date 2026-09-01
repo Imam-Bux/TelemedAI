@@ -10,6 +10,7 @@ import {
     FaStethoscope,
     FaComments
 } from 'react-icons/fa';
+import { useRequireRole } from '@/app/lib/requireAuth';
 import PatientsView from './PatientsView';
 import ReportsView from './ReportsView';
 import DoctorsView from './doctors/DoctorsView';
@@ -20,8 +21,9 @@ const STORAGE_KEY = 'admin-active-tab';
 
 export default function AdminDashboard() {
     const [activeTab, setActiveTab] = useState('patients');
-    const [isAuthorized, setIsAuthorized] = useState(false);
     const router = useRouter();
+    const authStatus = useRequireRole('admin');
+    const isAuthorized = authStatus === 'authorized';
 
     const setTab = (tab: string) => {
         setActiveTab(tab);
@@ -31,31 +33,12 @@ export default function AdminDashboard() {
     };
 
     useEffect(() => {
-        const checkAuthorization = async () => {
-            try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/profile`, {
-                    credentials: 'include'
-                });
-                if (!res.ok) {
-                    router.push('/');
-                    return;
-                }
-                const user = await res.json();
-                if (user.role === 'admin') {
-                    setIsAuthorized(true);
-                    const saved = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null;
-                    if (saved) {
-                        setActiveTab(saved);
-                    }
-                } else {
-                    router.push('/');
-                }
-            } catch {
-                router.push('/');
-            }
-        };
-        checkAuthorization();
-    }, [router]);
+        if (!isAuthorized) return;
+        const saved = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null;
+        if (saved) {
+            setActiveTab(saved);
+        }
+    }, [isAuthorized]);
 
     const handleLogout = async () => {
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {

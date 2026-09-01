@@ -3,13 +3,17 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { FaHome, FaFileMedical, FaCalendarPlus, FaComments, FaUserAlt, FaSignOutAlt } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
+import { useRequireRole } from '@/app/lib/requireAuth';
 
 export default function PatientDashboard() {
     const router = useRouter();
+    const authStatus = useRequireRole('patient');
+    const isAuthorized = authStatus === 'authorized';
     const [activeTab, setActiveTab] = useState('overview');
     const [profileStatus, setProfileStatus] = useState('Loading...');
 
     useEffect(() => {
+        if (!isAuthorized) return;
         const fetchProfileStatus = async () => {
             try {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/patient/profile`, {
@@ -28,7 +32,7 @@ export default function PatientDashboard() {
         };
 
         fetchProfileStatus();
-    }, []);
+    }, [isAuthorized]);
 
     const handleLogout = async () => {
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
@@ -37,6 +41,8 @@ export default function PatientDashboard() {
         });
         router.push('/');
     };
+
+    if (!isAuthorized) return null;
 
     return (
         <div className="min-h-screen bg-slate-50 flex text-secondary">

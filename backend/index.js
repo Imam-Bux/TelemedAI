@@ -31,14 +31,21 @@ app.use(express.urlencoded({ extended: true }));
 
 let isConnected = false;
 const connectDB = async () => {
-    if (isConnected || mongoose.connection.readyState >= 1) {
+    if (mongoose.connection.readyState === 1) {
+        isConnected = true;
         return;
     }
     try {
-        const db = await mongoose.connect(process.env.MONGODB_URI, { family: 4 });
-        isConnected = db.connections[0].readyState;
-        console.log('Database connected');
+        const db = await mongoose.connect(process.env.MONGODB_URI, {
+            family: 4,
+            serverSelectionTimeoutMS: 5000
+        });
+        isConnected = db.connections[0].readyState === 1;
+        if (isConnected) {
+            console.log('Database connected');
+        }
     } catch (err) {
+        isConnected = false;
         console.error('Database connection error:', err);
     }
 };

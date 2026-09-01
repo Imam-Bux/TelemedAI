@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import tokenService from '@/app/lib/tokenService';
+import { useRequireRole } from '@/app/lib/requireAuth';
 import ProfileComponent from './components/profile';
 import AppointmentsComponent from './components/appointments';
 import ConsultationComponent from './components/consultation';
@@ -20,9 +21,10 @@ const TAB_STORAGE = 'doctor-active-tab';
 export default function DoctorDashboard() {
     const [activeTab, setActiveTab] = useState('appointments');
     const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
-    const [isAuthorized, setIsAuthorized] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
+    const authStatus = useRequireRole('doctor');
+    const isAuthorized = authStatus === 'authorized';
+    const isLoading = authStatus === 'loading';
 
     const setTab = (tab: string) => {
         setActiveTab(tab);
@@ -32,45 +34,12 @@ export default function DoctorDashboard() {
     };
 
     useEffect(() => {
-        const checkAuth = async () => {
-            try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/profile`, {
-                    method: 'GET',
-                    credentials: 'include'
-                });
-
-                if (!res.ok) {
-                    router.push('/');
-                    return;
-                }
-
-                const user = await res.json();
-
-                if (user.role !== 'doctor') {
-                    router.push('/');
-                    return;
-                }
-
-                if (user.mustChangePassword) {
-                    router.push('/doctor/change-password');
-                    return;
-                }
-
-                setIsAuthorized(true);
-                const savedTab = typeof window !== 'undefined' ? localStorage.getItem(TAB_STORAGE) : null;
-                if (savedTab && savedTab !== 'consultation') {
-                    setActiveTab(savedTab);
-                }
-            } catch (err) {
-                console.error('Auth check error:', err);
-                router.push('/');
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        checkAuth();
-    }, [router]);
+        if (!isAuthorized) return;
+        const savedTab = typeof window !== 'undefined' ? localStorage.getItem(TAB_STORAGE) : null;
+        if (savedTab && savedTab !== 'consultation') {
+            setActiveTab(savedTab);
+        }
+    }, [isAuthorized]);
 
     const handleLogout = async () => {
         await tokenService.logout();

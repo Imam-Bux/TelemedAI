@@ -33,7 +33,8 @@ const signUP = async (payload) => {
         id: userId,
         email: dbResponse.email,
         fullName: dbResponse.fullName,
-        role: dbResponse.role
+        role: dbResponse.role,
+        mustChangePassword: dbResponse.mustChangePassword || false
     }, jwtSecret, { expiresIn: '7d' });
 
     return {
@@ -82,7 +83,8 @@ const login = async (payload) => {
         id: userId,
         email: isEmailExists.email,
         fullName: isEmailExists.fullName,
-        role: isEmailExists.role
+        role: isEmailExists.role,
+        mustChangePassword: isEmailExists.mustChangePassword || false
     }, jwtSecret, { expiresIn: '7d' });
 
     let completedOnboarding = false;
