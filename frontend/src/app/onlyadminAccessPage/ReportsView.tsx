@@ -1,7 +1,6 @@
 "use client"
 import React, { useState, useEffect, useCallback } from 'react';
 import { FaFilePdf } from 'react-icons/fa';
-import { useSocketEvent } from '@/app/lib/useSocketEvent';
 
 interface Report {
     _id: string;
@@ -49,11 +48,11 @@ export default function ReportsView() {
 
     useEffect(() => {
         fetchAllReports();
+        const intervalId = window.setInterval(() => {
+            fetchAllReports(true);
+        }, 10000);
+        return () => window.clearInterval(intervalId);
     }, [fetchAllReports]);
-
-    useSocketEvent('report:created', () => {
-        fetchAllReports(true);
-    });
 
     return (
         <div className="space-y-6">

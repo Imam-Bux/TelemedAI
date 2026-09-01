@@ -1,6 +1,5 @@
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
-import { useSocketEvent } from '@/app/lib/useSocketEvent';
 
 interface Appointment {
     id: string | number;
@@ -51,11 +50,11 @@ export default function AppointmentsComponent({ onSelectAppointment }: Appointme
 
     useEffect(() => {
         loadAppointments();
+        const intervalId = window.setInterval(() => {
+            loadAppointments(true);
+        }, 10000);
+        return () => window.clearInterval(intervalId);
     }, [loadAppointments]);
-
-    useSocketEvent('appointment:booked', () => {
-        loadAppointments(true);
-    });
 
     return (
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">

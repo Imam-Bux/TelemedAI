@@ -1,9 +1,8 @@
 "use client"
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { FaArrowLeft, FaUserMd, FaUser } from 'react-icons/fa';
-import { useSocketEvent } from '@/app/lib/useSocketEvent';
 
 interface Message {
     id?: string;
@@ -32,33 +31,35 @@ export default function PatientConsultationPage() {
     const [sending, setSending] = useState(false);
     const [error, setError] = useState('');
 
-    useEffect(() => {
-        const loadRoom = async () => {
-            if (!appointmentId) return;
-            setLoading(true);
-            setError('');
-            try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat/room/${appointmentId}`, {
-                    method: 'GET',
-                    credentials: 'include'
-                });
-                const data = await res.json();
-                if (!res.ok || data?.error) {
-                    setError(data.message || 'Unable to load chat room');
-                    return;
-                }
-                setRoomId(data.room?.id || '');
-                setRoomInfo(data.room || null);
-                setMessages(data.messages || []);
-            } catch (err) {
-                setError('Server connection failed');
-            } finally {
-                setLoading(false);
+    const loadRoom = useCallback(async () => {
+        if (!appointmentId) return;
+        setError('');
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat/room/${appointmentId}`, {
+                method: 'GET',
+                credentials: 'include'
+            });
+            const data = await res.json();
+            if (!res.ok || data?.error) {
+                setError(data.message || 'Unable to load chat room');
+                return;
             }
-        };
-
-        loadRoom();
+            setRoomId(data.room?.id || '');
+            setRoomInfo(data.room || null);
+            setMessages(data.messages || []);
+        } catch (err) {
+            setError('Server connection failed');
+        }
     }, [appointmentId]);
+
+    useEffect(() => {
+        setLoading(true);
+        loadRoom().finally(() => setLoading(false));
+        const intervalId = window.setInterval(() => {
+            loadRoom();
+        }, 10000);
+        return () => window.clearInterval(intervalId);
+    }, [loadRoom]);
 
     const handleSend = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -88,17 +89,6 @@ export default function PatientConsultationPage() {
             setSending(false);
         }
     };
-
-    useSocketEvent('chat:message', (payload) => {
-        const data = payload as { roomId?: string; message?: Message };
-        if (data?.message && roomId && data.roomId === roomId) {
-            setMessages((prev) => {
-                const exists = prev.some((m) => m.id && data.message && m.id === data.message.id);
-                if (exists) return prev;
-                return [...prev, data.message as Message];
-            });
-        }
-    });
 
     return (
         <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8 text-secondary">

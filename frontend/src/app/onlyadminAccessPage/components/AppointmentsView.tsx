@@ -1,7 +1,6 @@
 "use client"
 import React, { useState, useEffect, useCallback } from 'react';
 import { FaCalendarCheck } from 'react-icons/fa';
-import { useSocketEvent } from '@/app/lib/useSocketEvent';
 
 interface AppointmentAdminView {
     _id: string;
@@ -43,15 +42,11 @@ export default function AppointmentsView() {
 
     useEffect(() => {
         fetchAllAppointments();
+        const intervalId = window.setInterval(() => {
+            fetchAllAppointments();
+        }, 10000);
+        return () => window.clearInterval(intervalId);
     }, [fetchAllAppointments]);
-
-    useSocketEvent('appointment:booked', () => {
-        fetchAllAppointments();
-    });
-
-    useSocketEvent('appointment:updated', () => {
-        fetchAllAppointments();
-    });
 
     return (
         <div className="space-y-6">

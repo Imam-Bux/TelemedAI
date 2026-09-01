@@ -1,18 +1,17 @@
 import localFont from 'next/font/local';
 import { AuthProvider } from './context/AuthContext';
-import { SocketProvider } from './context/SocketContext';
 import AuthModal from "./Components/AuthModal";
 import './globals.css';
 
 const plusJakartaSans = localFont({
   src: [
     {
-      path: '../public/Assets/PlusJakartaSans-Regular.ttf', 
+      path: '../../public/Assets/Plus_Jakarta_Sans/static/PlusJakartaSans-Regular.ttf', 
       weight: '400',
       style: 'normal',
     },
     {
-      path: '../public/Assets/PlusJakartaSans-Bold.ttf',
+      path: '../../public/Assets/Plus_Jakarta_Sans/static/PlusJakartaSans-Bold.ttf',
       weight: '700',
       style: 'normal',
     },
@@ -26,9 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={plusJakartaSans.className}>
       <body className="min-h-full flex flex-col font-sans">
         <AuthProvider>
-          <SocketProvider>
-            {children}
-          </SocketProvider>
+          {children}
           <AuthModal />
         </AuthProvider>
       </body>

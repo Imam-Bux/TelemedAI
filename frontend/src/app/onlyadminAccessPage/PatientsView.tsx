@@ -1,6 +1,5 @@
 "use client"
 import React, { useState, useEffect, useCallback } from 'react';
-import { useSocketEvent } from '@/app/lib/useSocketEvent';
 
 type PatientProfile = {
     _id: string;
@@ -53,11 +52,11 @@ export default function PatientsView() {
 
     useEffect(() => {
         fetchAllProfiles();
+        const intervalId = window.setInterval(() => {
+            fetchAllProfiles(true);
+        }, 10000);
+        return () => window.clearInterval(intervalId);
     }, [fetchAllProfiles]);
-
-    useSocketEvent('patient:profile-updated', () => {
-        fetchAllProfiles(true);
-    });
 
     return (
         <div className="space-y-6">

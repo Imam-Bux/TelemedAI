@@ -1,5 +1,4 @@
 import * as appointmentService from './service.js';
-import { emitAppointmentBooked } from '../../socket.js';
 
 const getAvailableSlots = async (req, res) => {
     const { doctorId } = req.params;
@@ -26,7 +25,6 @@ const bookAppointment = async (req, res) => {
     if (result?.error) {
         return res.status(400).json(result);
     }
-    emitAppointmentBooked(result);
     res.status(201).json(result);
 };
 

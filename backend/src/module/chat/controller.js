@@ -1,14 +1,10 @@
 import * as chatService from './service.js';
-import { emitChatMessage, emitRoomCreated } from '../../socket.js';
 
 const getOrCreateRoom = async (req, res) => {
     const currentUser = res.locals.user;
     const result = await chatService.getOrCreateRoom(req.params.appointmentId, currentUser);
     if (result?.error) {
         return res.status(400).json(result);
-    }
-    if (result?.created) {
-        emitRoomCreated(result.room);
     }
     res.json(result);
 };
@@ -20,9 +16,6 @@ const sendMessage = async (req, res) => {
     const result = await chatService.sendMessage(roomId, currentUser, message);
     if (result?.error) {
         return res.status(400).json(result);
-    }
-    if (result?.message) {
-        emitChatMessage(roomId, result.message);
     }
     res.status(201).json(result);
 };

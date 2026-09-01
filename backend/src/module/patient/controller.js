@@ -1,7 +1,6 @@
 import Groq from 'groq-sdk';
 import PDFParser from 'pdf2json';
 import * as patientService from './service.js';
-import { emitProfileUpdated, emitReportCreated } from '../../socket.js';
 
 const groq = new Groq({
     apiKey: process.env.GROQ_API_KEY || undefined
@@ -40,7 +39,6 @@ const saveOnboarding = async (req, res) => {
     if (result?.error) {
         return res.status(400).json(result);
     }
-    emitProfileUpdated(result);
     res.json(result);
 };
 
@@ -84,7 +82,6 @@ const saveReport = async (req, res) => {
         if (result?.error) {
             return res.status(400).json(result);
         }
-        emitReportCreated(result);
         res.json(result);
     } catch (err) {
         res.status(500).json({ error: true, message: err.message });

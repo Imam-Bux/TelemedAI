@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { FaArrowLeft, FaUserMd, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import { useSocketEvent } from '@/app/lib/useSocketEvent';
 
 interface DoctorUser {
     _id: string;
@@ -215,33 +214,12 @@ export default function PatientAppointmentsPage() {
     }, []);
 
     useEffect(() => {
-        // Local self-contained fetch on mount - avoids calling the shared
-        // useCallback fetcher directly from the effect body.
-        const loadMyAppointments = async () => {
-            try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/appointment/my`, {
-                    method: 'GET',
-                    credentials: 'include'
-                });
-                const data = await res.json();
-                if (res.ok && Array.isArray(data)) {
-                    setMyAppointments(data);
-                }
-            } catch (err) {
-                console.error('Failed to load your appointments', err);
-            }
-        };
-
-        loadMyAppointments();
-    }, []);
-
-    useSocketEvent('appointment:booked', () => {
         fetchMyAppointments();
-    });
-
-    useSocketEvent('appointment:updated', () => {
-        fetchMyAppointments();
-    });
+        const intervalId = window.setInterval(() => {
+            fetchMyAppointments();
+        }, 10000);
+        return () => window.clearInterval(intervalId);
+    }, [fetchMyAppointments]);
 
     useEffect(() => {
         let cancelled = false;

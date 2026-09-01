@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { FaArrowLeft, FaComments, FaUserMd } from 'react-icons/fa';
-import { useSocketEvent } from '@/app/lib/useSocketEvent';
 
 interface ChatRoom {
     id: string;
@@ -48,23 +47,11 @@ export default function PatientConsultationsPage() {
 
     useEffect(() => {
         loadRooms();
+        const intervalId = window.setInterval(() => {
+            loadRooms(true);
+        }, 10000);
+        return () => window.clearInterval(intervalId);
     }, [loadRooms]);
-
-    useSocketEvent('chat:message', () => {
-        loadRooms(true);
-    });
-
-    useSocketEvent('chat:room-created', () => {
-        loadRooms(true);
-    });
-
-    useSocketEvent('appointment:booked', () => {
-        loadRooms(true);
-    });
-
-    useSocketEvent('appointment:updated', () => {
-        loadRooms(true);
-    });
 
     return (
         <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 text-secondary">

@@ -1,6 +1,5 @@
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
-import { useSocketEvent } from '@/app/lib/useSocketEvent';
 
 interface Appointment {
     id: string | number;
@@ -157,23 +156,16 @@ export default function ConsultationComponent({ appointment, onBack }: Consultat
         }
     }, [appointment]);
 
-    useSocketEvent('report:created', (payload) => {
-        const data = payload as { report?: { patientId?: string } };
-        if (data?.report?.patientId && appointment && String(data.report.patientId) === String(appointment.patient_id)) {
-            loadReports();
-        }
-    });
+    useEffect(() => {
+        if (!appointment) return;
 
-    useSocketEvent('chat:message', (payload) => {
-        const data = payload as { roomId?: string; message?: Message };
-        if (data?.message && roomId && data.roomId === roomId) {
-            setMessages((prev) => {
-                const exists = prev.some((m) => m.id && data.message && m.id === data.message.id);
-                if (exists) return prev;
-                return [...prev, data.message as Message];
-            });
-        }
-    });
+        const intervalId = window.setInterval(() => {
+            loadChat();
+            loadReports();
+        }, 10000);
+
+        return () => window.clearInterval(intervalId);
+    }, [appointment, loadChat, loadReports]);
 
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();

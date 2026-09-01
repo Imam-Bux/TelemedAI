@@ -1,5 +1,16 @@
 import * as authService from './service.js';
 
+const setAuthCookie = (res, token) => {
+    const isProduction = process.env.NODE_ENV === 'production' || !!process.env.VERCEL;
+    res.cookie('token', token, {
+        httpOnly: true,
+        sameSite: isProduction ? 'none' : 'lax',
+        secure: isProduction,
+        path: '/',
+        maxAge: 7 * 24 * 60 * 60 * 1000
+    });
+};
+
 const signUp = async (req, res) => {
     const payload = {
         fullName: req.body.fullName,
@@ -10,13 +21,7 @@ const signUp = async (req, res) => {
     if (result?.error) {
         return res.status(400).json(result);
     }
-    res.cookie('token', result.token, {
-        httpOnly: true,
-        sameSite: 'lax',
-        secure: false,
-        path: '/',
-        maxAge: 7 * 24 * 60 * 60 * 1000
-    });
+    setAuthCookie(res, result.token);
     return res.json({
         completedOnboarding: result.completedOnboarding,
         mustChangePassword: result.mustChangePassword,
@@ -33,13 +38,7 @@ const login = async (req, res) => {
     if (result?.error) {
         return res.status(400).json(result);
     }
-    res.cookie('token', result.token, {
-        httpOnly: true,
-        sameSite: 'lax',
-        secure: false,
-        path: '/',
-        maxAge: 7 * 24 * 60 * 60 * 1000
-    });
+    setAuthCookie(res, result.token);
     return res.json({
         completedOnboarding: result.completedOnboarding,
         mustChangePassword: result.mustChangePassword,

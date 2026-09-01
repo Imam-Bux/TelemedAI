@@ -3,14 +3,12 @@ import * as appointmentService from '../appointment/service.js';
 import * as patientRepo from '../patient/repositries.js';
 import patientProfileModel from '../../model/patientProfile.js';
 import userModel from '../../model/user.js';
-import { emitAppointmentUpdated, emitDoctorCreated } from '../../socket.js';
 
 const createDoctor = async (req, res) => {
     const result = await doctorService.createDoctor(req.body);
     if (result?.error) {
         return res.status(400).json(result);
     }
-    emitDoctorCreated(result);
     res.status(201).json(result);
 };
 
@@ -143,7 +141,6 @@ const completeAppointment = async (req, res) => {
             return res.status(400).json(result);
         }
 
-        emitAppointmentUpdated(result);
         res.json(result);
     } catch (err) {
         res.status(500).json({

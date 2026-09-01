@@ -1,7 +1,6 @@
 "use client"
 import React, { useState, useEffect, useCallback } from 'react';
 import { FaArrowLeft, FaComments, FaUserMd, FaUser } from 'react-icons/fa';
-import { useSocketEvent } from '@/app/lib/useSocketEvent';
 
 interface ChatRoom {
     id: string;
@@ -94,21 +93,15 @@ export default function ChatView() {
         }
     }, []);
 
-    useSocketEvent('chat:message', (payload) => {
-        const data = payload as { roomId?: string };
-        loadRooms(true);
-        if (selectedId && data?.roomId === selectedId) {
-            openRoom(selectedId).catch(() => {});
-        }
-    });
-
-    useSocketEvent('appointment:booked', () => {
-        loadRooms(true);
-    });
-
-    useSocketEvent('chat:room-created', () => {
-        loadRooms(true);
-    });
+    useEffect(() => {
+        const intervalId = window.setInterval(() => {
+            loadRooms(true);
+            if (selectedId) {
+                openRoom(selectedId).catch(() => {});
+            }
+        }, 10000);
+        return () => window.clearInterval(intervalId);
+    }, [loadRooms, openRoom, selectedId]);
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

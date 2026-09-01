@@ -1,7 +1,6 @@
 "use client"
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSocketEvent } from '@/app/lib/useSocketEvent';
 
 interface DoctorUser {
     fullName?: string;
@@ -39,11 +38,11 @@ export default function DoctorsView() {
 
     useEffect(() => {
         fetchDoctors();
+        const intervalId = window.setInterval(() => {
+            fetchDoctors();
+        }, 10000);
+        return () => window.clearInterval(intervalId);
     }, [fetchDoctors]);
-
-    useSocketEvent('doctor:created', () => {
-        fetchDoctors();
-    });
 
     return (
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
